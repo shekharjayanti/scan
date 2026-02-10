@@ -17,6 +17,14 @@
         .low-dist { color: #6f42c1; font-weight: 500; }
         .top-5-card { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 20px; height: 100%; }
         .top-5-header { background: #f8f9fa; font-weight: bold; padding: 8px; border-bottom: 1px solid #dee2e6; font-size: 0.85rem; text-align: center; }
+        
+        /* 10% Alert Glow */
+        .alert-flash { animation: pulse-red 2s infinite; border-radius: 4px; padding: 2px 5px; background-color: rgba(220, 53, 69, 0.1); }
+        .alert-flash-pos { animation: pulse-green 2s infinite; border-radius: 4px; padding: 2px 5px; background-color: rgba(40, 167, 69, 0.1); }
+        
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); } }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } }
+
         th[role="columnheader"] { cursor: pointer; position: relative; }
         th[role="columnheader"]::after { content: ' ↕'; font-size: 0.6em; opacity: 0.5; margin-left: 5px; }
         th[aria-sort="ascending"]::after { content: ' ▲'; opacity: 1; }
@@ -32,7 +40,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="m-0">📊 Market Extremes Tracker</h2>
-            <p class="text-muted small mb-0">Tracking volatility for your portfolio</p>
+            <p class="text-muted small mb-0">PetroTel Watchlist Monitor</p>
         </div>
         <div class="text-end">
             <span id="last-update" class="text-muted small d-block"></span>
@@ -43,30 +51,35 @@
         </div>
     </div>
 
+    <h6 class="text-muted mb-3">Today's Performance</h6>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="top-5-card">
+                <div class="top-5-header text-success">🚀 Top 5 Daily Gainers</div>
+                <table class="table table-sm small-table"><tbody id="top-gainers"></tbody></table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="top-5-card">
+                <div class="top-5-header text-danger">📉 Top 5 Daily Losers</div>
+                <table class="table table-sm small-table"><tbody id="top-losers"></tbody></table>
+            </div>
+        </div>
+    </div>
+
+    <h6 class="text-muted mb-3">Historical Extremes</h6>
     <div class="row mb-4" id="leaderboards">
         <div class="col-md-3">
-            <div class="top-5-card">
-                <div class="top-5-header text-warning">🟢 Closest to 52W High</div>
-                <table class="table table-sm small-table"><tbody id="top-52h"></tbody></table>
-            </div>
+            <div class="top-5-card"><div class="top-5-header text-warning">🟢 Closest to 52W High</div><table class="table table-sm small-table"><tbody id="top-52h"></tbody></table></div>
         </div>
         <div class="col-md-3">
-            <div class="top-5-card">
-                <div class="top-5-header text-primary">🔴 Closest to 52W Low</div>
-                <table class="table table-sm small-table"><tbody id="top-52l"></tbody></table>
-            </div>
+            <div class="top-5-card"><div class="top-5-header text-primary">🔴 Closest to 52W Low</div><table class="table table-sm small-table"><tbody id="top-52l"></tbody></table></div>
         </div>
         <div class="col-md-3">
-            <div class="top-5-card">
-                <div class="top-5-header text-warning">🏛️ Closest to 5Y High</div>
-                <table class="table table-sm small-table"><tbody id="top-5yh"></tbody></table>
-            </div>
+            <div class="top-5-card"><div class="top-5-header text-warning">🏛️ Closest to 5Y High</div><table class="table table-sm small-table"><tbody id="top-5yh"></tbody></table></div>
         </div>
         <div class="col-md-3">
-            <div class="top-5-card">
-                <div class="top-5-header text-primary">⚓ Closest to 5Y Low</div>
-                <table class="table table-sm small-table"><tbody id="top-5yl"></tbody></table>
-            </div>
+            <div class="top-5-card"><div class="top-5-header text-primary">⚓ Closest to 5Y Low</div><table class="table table-sm small-table"><tbody id="top-5yl"></tbody></table></div>
         </div>
     </div>
 
@@ -89,7 +102,8 @@
 </div>
 
 <script>
-    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9j82G-RmsQ0zlKmcgHqVCUpd5e8tVSqValzULDzCL1ceQrPEPczY5nVp2sl-9n5vNxosLu0qfN66G/pub?output=csv';
+    // Ensure this link is correct from your "Publish to Web" settings
+    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1sEP1zRqhjJqp_cuLvggNBjiPdjbrCpMr5DW-7rIBF_s/gviz/tq?tqx=out:csv&gid=1028487677';
 
     function init() {
         Papa.parse(SHEET_CSV_URL, {
@@ -106,56 +120,51 @@
     }
 
     function renderLeaderboards(data) {
-        const createRows = (sortedData, colName) => {
-            return sortedData.slice(0, 5).map(row => `
-                <tr>
-                    <td><strong>${row.Ticker}</strong></td>
-                    <td class="text-end">${(parseFloat(row[colName]) * 100).toFixed(1)}%</td>
-                </tr>
-            `).join('');
+        const createRows = (sortedData, colName, formatAsPct = true) => {
+            return sortedData.slice(0, 5).map(row => {
+                const rawVal = parseFloat(row[colName]);
+                const val = rawVal * (formatAsPct ? 100 : 1);
+                const alertClass = Math.abs(val) >= 10 ? (val > 0 ? 'alert-flash-pos' : 'alert-flash') : '';
+                return `<tr><td><span class="${alertClass}"><strong>${row.Ticker}</strong></span></td><td class="text-end ${val >= 0 ? 'pos' : 'neg'}">${val.toFixed(2)}%</td></tr>`;
+            }).join('');
         };
-        const sortSmallest = (arr, col) => [...arr].sort((a, b) => parseFloat(a[col]) - parseFloat(b[col]));
-        document.getElementById('top-52h').innerHTML = createRows(sortSmallest(data, 'Dist 52W High %'), 'Dist 52W High %');
-        document.getElementById('top-52l').innerHTML = createRows(sortSmallest(data, 'Dist 52W Low %'), 'Dist 52W Low %');
-        document.getElementById('top-5yh').innerHTML = createRows(sortSmallest(data, 'Dist 5Y High %'), 'Dist 5Y High %');
-        document.getElementById('top-5yl').innerHTML = createRows(sortSmallest(data, 'Dist 5Y Low %'), 'Dist 5Y Low %');
+
+        const sort = (arr, col, desc = false) => [...arr].sort((a, b) => desc ? parseFloat(b[col]) - parseFloat(a[col]) : parseFloat(a[col]) - parseFloat(b[col]));
+
+        document.getElementById('top-gainers').innerHTML = createRows(sort(data, 'Day %', true), 'Day %');
+        document.getElementById('top-losers').innerHTML = createRows(sort(data, 'Day %', false), 'Day %');
+        document.getElementById('top-52h').innerHTML = createRows(sort(data, 'Dist 52W High %'), 'Dist 52W High %');
+        document.getElementById('top-52l').innerHTML = createRows(sort(data, 'Dist 52W Low %'), 'Dist 52W Low %');
+        document.getElementById('top-5yh').innerHTML = createRows(sort(data, 'Dist 5Y High %'), 'Dist 5Y High %');
+        document.getElementById('top-5yl').innerHTML = createRows(sort(data, 'Dist 5Y Low %'), 'Dist 5Y Low %');
     }
 
     function renderMainTable(data) {
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = data.map(row => {
             const dayChange = parseFloat(row['Day %']) * 100;
-            const d52H = (parseFloat(row['Dist 52W High %']) * 100).toFixed(1);
-            const d52L = (parseFloat(row['Dist 52W Low %']) * 100).toFixed(1);
-            const d5YH = (parseFloat(row['Dist 5Y High %']) * 100).toFixed(1);
-            const d5YL = (parseFloat(row['Dist 5Y Low %']) * 100).toFixed(1);
-
+            const alertClass = Math.abs(dayChange) >= 10 ? (dayChange > 0 ? 'alert-flash-pos' : 'alert-flash') : '';
+            
             return `
                 <tr>
-                    <td><strong>${row.Ticker}</strong></td>
+                    <td><span class="${alertClass}"><strong>${row.Ticker}</strong></span></td>
                     <td data-sort="${row.Price}">$${parseFloat(row.Price).toFixed(2)}</td>
                     <td class="${dayChange >= 0 ? 'pos' : 'neg'}" data-sort="${dayChange}">${dayChange.toFixed(2)}%</td>
-                    <td class="high-dist" data-sort="${d52H}">-${d52H}%</td>
-                    <td class="low-dist" data-sort="${d52L}">+${d52L}%</td>
-                    <td class="high-dist" data-sort="${d5YH}">-${d5YH}%</td>
-                    <td class="low-dist" data-sort="${d5YL}">+${d5YL}%</td>
+                    <td class="high-dist" data-sort="${row['Dist 52W High %']}">-${(parseFloat(row['Dist 52W High %']) * 100).toFixed(1)}%</td>
+                    <td class="low-dist" data-sort="${row['Dist 52W Low %']}">+${(parseFloat(row['Dist 52W Low %']) * 100).toFixed(1)}%</td>
+                    <td class="high-dist" data-sort="${row['Dist 5Y High %']}">-${(parseFloat(row['Dist 5Y High %']) * 100).toFixed(1)}%</td>
+                    <td class="low-dist" data-sort="${row['Dist 5Y Low %']}">+${(parseFloat(row['Dist 5Y Low %']) * 100).toFixed(1)}%</td>
                 </tr>
             `;
         }).join('');
     }
 
     function filterTable() {
-        const input = document.getElementById("tickerSearch");
-        const filter = input.value.toUpperCase();
-        const table = document.getElementById("main-stock-table");
-        const tr = table.getElementsByTagName("tr");
-
+        const filter = document.getElementById("tickerSearch").value.toUpperCase();
+        const tr = document.getElementById("main-stock-table").getElementsByTagName("tr");
         for (let i = 1; i < tr.length; i++) {
             const td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                const txtValue = td.textContent || td.innerText;
-                tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
-            }
+            tr[i].style.display = (td && (td.textContent || td.innerText).toUpperCase().indexOf(filter) > -1) ? "" : "none";
         }
     }
 
