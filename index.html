@@ -180,6 +180,11 @@
     }
 
     init();
+    // AUTO-UPDATE: Set to run every 60,000 milliseconds (1 minute)
+    setInterval(init, 60000);
+
+    function filterTable() { /* same as before */ }
+    function clearSearch() { /* same as before */ }
 </script>
 </body>
 </html>
