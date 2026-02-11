@@ -140,24 +140,30 @@
     }
 
     function renderMainTable(data) {
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = data.map(row => {
-            const dayChange = parseFloat(row['Day %']) * 100;
-            const alertClass = Math.abs(dayChange) >= 10 ? (dayChange > 0 ? 'alert-flash-pos' : 'alert-flash') : '';
-            
-            return `
-                <tr>
-                    <td><span class="${alertClass}"><strong>${row.Ticker}</strong></span></td>
-                    <td data-sort="${row.Price}">$${parseFloat(row.Price).toFixed(2)}</td>
-                    <td class="${dayChange >= 0 ? 'pos' : 'neg'}" data-sort="${dayChange}">${dayChange.toFixed(2)}%</td>
-                    <td class="high-dist" data-sort="${row['Dist 52W High %']}">-${(parseFloat(row['Dist 52W High %']) * 100).toFixed(1)}%</td>
-                    <td class="low-dist" data-sort="${row['Dist 52W Low %']}">+${(parseFloat(row['Dist 52W Low %']) * 100).toFixed(1)}%</td>
-                    <td class="high-dist" data-sort="${row['Dist 5Y High %']}">-${(parseFloat(row['Dist 5Y High %']) * 100).toFixed(1)}%</td>
-                    <td class="low-dist" data-sort="${row['Dist 5Y Low %']}">+${(parseFloat(row['Dist 5Y Low %']) * 100).toFixed(1)}%</td>
-                </tr>
-            `;
-        }).join('');
-    }
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = data.map(row => {
+        // Multiply by 100 to convert decimal (0.05) to percentage (5.0)
+        const dayChange = parseFloat(row['Day %']) * 100;
+        const d52H = (parseFloat(row['Dist 52W High %']) * 100).toFixed(1);
+        const d52L = (parseFloat(row['Dist 52W Low %']) * 100).toFixed(1);
+        const d5YH = (parseFloat(row['Dist 5Y High %']) * 100).toFixed(1);
+        const d5YL = (parseFloat(row['Dist 5Y Low %']) * 100).toFixed(1);
+
+        const alertClass = Math.abs(dayChange) >= 10 ? (dayChange > 0 ? 'alert-flash-pos' : 'alert-flash') : '';
+        
+        return `
+            <tr>
+                <td><span class="${alertClass}"><strong>${row.Ticker}</strong></span></td>
+                <td>$${parseFloat(row.Price).toFixed(2)}</td>
+                <td class="${dayChange >= 0 ? 'pos' : 'neg'}">${dayChange.toFixed(2)}%</td>
+                <td class="high-dist">-${d52H}%</td>
+                <td class="low-dist">+${d52L}%</td>
+                <td class="high-dist">-${d5YH}%</td>
+                <td class="low-dist">+${d5YL}%</td>
+            </tr>
+        `;
+    }).join('');
+}
 
     function filterTable() {
         const filter = document.getElementById("tickerSearch").value.toUpperCase();
