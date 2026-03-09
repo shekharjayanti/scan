@@ -124,7 +124,9 @@
             }).join('');
         };
 
-        const sort = (arr, col, desc = false) => [...arr].sort((a, b) => desc ? parseFloat(b[col]) - parseFloat(a[col]) : parseFloat(a[col]) - parseFloat(b[col]));
+        const sort = (arr, col, desc = false) => [...arr]
+            .filter(row => !isNaN(parseFloat(row[col])))
+            .sort((a, b) => desc ? parseFloat(b[col]) - parseFloat(a[col]) : parseFloat(a[col]) - parseFloat(b[col]));
 
         document.getElementById('top-gainers').innerHTML = createSummaryRows(sort(data, 'Day %', true), 'Day %', "+");
         document.getElementById('top-losers').innerHTML = createSummaryRows(sort(data, 'Day %', false), 'Day %');
