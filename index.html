@@ -27,6 +27,14 @@
 
         th { background-color: #f8f9fa !important; font-size: 0.75rem; text-transform: uppercase; color: #6c757d; cursor: pointer; }
         .small-table { font-size: 0.8rem; margin-bottom: 0; }
+        .score3-card { background: #fff8e1; border: 2px solid #ffc107; border-radius: 8px; margin-bottom: 20px; }
+        .score3-header { background: #ffc107; color: #000; font-weight: bold; padding: 8px 12px; border-radius: 6px 6px 0 0; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
+        .score3-badge { background: #000; color: #ffc107; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; }
+        .score3-pill { display: inline-flex; align-items: center; gap: 6px; background: white; border: 1px solid #dee2e6; border-radius: 20px; padding: 4px 12px; font-size: 0.8rem; margin: 4px; }
+        .score3-pill .s3ticker { font-weight: bold; font-size: 0.85rem; }
+        .score3-pill .s3price { color: #6c757d; }
+        .score3-pill .s3day { font-weight: bold; }
+        .score3-pills-wrap { padding: 10px 12px; display: flex; flex-wrap: wrap; }
     </style>
 </head>
 <body>
@@ -46,6 +54,16 @@
         </div>
     </div>
 
+
+    <div class="score3-card">
+        <div class="score3-header">
+            <span>⭐ Top Score Stocks &nbsp;<span class="score3-badge">3</span></span>
+            <span id="score3-count" class="text-dark" style="font-size:0.8rem;"></span>
+        </div>
+        <div class="score3-pills-wrap" id="score3-pills">
+            <span class="text-muted small p-2">Loading...</span>
+        </div>
+    </div>
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="top-5-card">
@@ -97,6 +115,7 @@
                 const data = results.data.filter(row => row.Ticker && row.Price);
                 renderLeaderboards(data);
                 renderMainTable(data);
+                renderScore3(data);
                 
                 const table = document.getElementById('main-stock-table');
                 if (!table.getAttribute('data-tablesort-initialized')) {
@@ -134,6 +153,29 @@
         document.getElementById('top-52l').innerHTML = createSummaryRows(sort(data, 'Dist 52W Low %'), 'Dist 52W Low %', "+");
         document.getElementById('top-5yh').innerHTML = createSummaryRows(sort(data, 'Dist 5Y High %'), 'Dist 5Y High %', "-");
         document.getElementById('top-5yl').innerHTML = createSummaryRows(sort(data, 'Dist 5Y Low %'), 'Dist 5Y Low %', "+");
+    }
+
+    function renderScore3(data) {
+        const scored = data.filter(row => String(row['Score']).trim() === '3');
+        const container = document.getElementById('score3-pills');
+        const countEl = document.getElementById('score3-count');
+        countEl.innerText = scored.length + ' stock' + (scored.length !== 1 ? 's' : '');
+        if (scored.length === 0) {
+            container.innerHTML = '<span class="text-muted small p-2">No stocks with Score 3 found.</span>';
+            return;
+        }
+        container.innerHTML = scored.map(row => {
+            const day = parseFloat(row['Day %']);
+            const dayStr = isNaN(day) ? '' : (day >= 0 ? '+' : '') + day.toFixed(2) + '%';
+            const dayClass = isNaN(day) ? '' : (day >= 0 ? 'pos' : 'neg');
+            const price = parseFloat(row.Price);
+            const priceStr = isNaN(price) ? '' : '$' + price.toFixed(2);
+            return `<span class="score3-pill">
+                <span class="s3ticker">${row.Ticker}</span>
+                <span class="s3price">${priceStr}</span>
+                <span class="s3day ${dayClass}">${dayStr}</span>
+            </span>`;
+        }).join('');
     }
 
     function renderMainTable(data) {
