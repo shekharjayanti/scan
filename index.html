@@ -14,29 +14,33 @@
         .pos { color: #28a745; font-weight: bold; }
         .neg { color: #dc3545; font-weight: bold; }
         .high-dist { color: #fd7e14; font-weight: 500; }
-        .low-dist { color: #6f42c1; font-weight: 500; }
+        .low-dist  { color: #6f42c1; font-weight: 500; }
+        .peg-good  { color: #28a745; font-weight: 600; }
+        .peg-fair  { color: #fd7e14; font-weight: 600; }
+        .peg-bad   { color: #dc3545; font-weight: 600; }
+        .peg-na    { color: #adb5bd; }
+
         .top-5-card { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 20px; height: 100%; }
         .top-5-header { background: #f8f9fa; font-weight: bold; padding: 8px; border-bottom: 1px solid #dee2e6; font-size: 0.85rem; text-align: center; }
         .summary-price { color: #6c757d; font-size: 0.8rem; margin-right: 8px; }
 
-        .alert-flash { animation: pulse-red 2s infinite; border-radius: 4px; padding: 2px 5px; background-color: rgba(220, 53, 69, 0.1); }
-        .alert-flash-pos { animation: pulse-green 2s infinite; border-radius: 4px; padding: 2px 5px; background-color: rgba(40, 167, 69, 0.1); }
+        .alert-flash     { animation: pulse-red   2s infinite; border-radius: 4px; padding: 2px 5px; background-color: rgba(220,53,69,0.1); }
+        .alert-flash-pos { animation: pulse-green 2s infinite; border-radius: 4px; padding: 2px 5px; background-color: rgba(40,167,69,0.1); }
 
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); } }
-        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } }
+        @keyframes pulse-red   { 0%{box-shadow:0 0 0 0 rgba(220,53,69,0.4);}  70%{box-shadow:0 0 0 10px rgba(220,53,69,0);}  100%{box-shadow:0 0 0 0 rgba(220,53,69,0);} }
+        @keyframes pulse-green { 0%{box-shadow:0 0 0 0 rgba(40,167,69,0.4);}  70%{box-shadow:0 0 0 10px rgba(40,167,69,0);}  100%{box-shadow:0 0 0 0 rgba(40,167,69,0);} }
 
         th { background-color: #f8f9fa !important; font-size: 0.75rem; text-transform: uppercase; color: #6c757d; cursor: pointer; }
         .small-table { font-size: 0.8rem; margin-bottom: 0; }
 
         /* Signal Table */
-        .signal-table-wrap { border-radius: 10px; overflow: hidden; border: 1px solid #dee2e6; margin-bottom: 24px; }
+        .signal-table-wrap   { border-radius: 10px; overflow: hidden; border: 1px solid #dee2e6; margin-bottom: 24px; }
         .signal-table-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; font-weight: 700; font-size: 0.9rem; }
         .signal-table-header.strong { background: linear-gradient(90deg, #1a7a3c, #28a745); color: white; }
         .signal-table-header.watch  { background: linear-gradient(90deg, #b8860b, #ffc107); color: #1a1a1a; }
         .signal-count { font-size: 0.78rem; font-weight: 600; opacity: 0.85; }
 
-        .signal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0; }
-        .signal-row { display: contents; }
+        .signal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0; }
 
         .signal-cell {
             display: flex;
@@ -52,17 +56,22 @@
         .signal-cell.strong-cell { border-left: 3px solid #28a745; }
         .signal-cell.watch-cell  { border-left: 3px solid #ffc107; }
 
-        .sc-ticker { font-weight: 700; font-size: 0.88rem; color: #1a1a1a; min-width: 52px; }
-        .sc-price  { color: #6c757d; font-size: 0.78rem; margin: 0 6px; }
-        .sc-score  { font-size: 0.72rem; font-weight: 700; border-radius: 10px; padding: 1px 7px; }
+        .sc-ticker { font-weight: 700; font-size: 0.88rem; color: #1a1a1a; min-width: 48px; }
+        .sc-price  { color: #6c757d; font-size: 0.75rem; margin: 0 3px; }
+        .sc-peg    { font-size: 0.72rem; font-weight: 600; margin: 0 3px; }
+        .sc-score  { font-size: 0.72rem; font-weight: 700; border-radius: 10px; padding: 1px 7px; white-space: nowrap; }
         .sc-score.strong { background: #d4edda; color: #155724; }
         .sc-score.watch  { background: #fff3cd; color: #856404; }
-        .sc-day    { font-size: 0.78rem; font-weight: 600; min-width: 48px; text-align: right; }
+        .sc-day    { font-size: 0.78rem; font-weight: 600; min-width: 50px; text-align: right; }
+
+        .peg-legend { font-size: 0.7rem; display: inline-flex; gap: 10px; margin-left: 10px; opacity: 0.9; font-weight: 500; }
     </style>
 </head>
 <body>
 
 <div class="container-fluid">
+
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="m-0">📊 Market Extremes Tracker</h2>
@@ -77,10 +86,18 @@
         </div>
     </div>
 
-    <!-- Strong Buy Table -->
+    <!-- Strong Buy -->
     <div class="signal-table-wrap">
         <div class="signal-table-header strong">
-            <span>🟢 Strong Buy &nbsp;<span style="font-size:0.78rem;opacity:0.8;">(Score 8–9)</span></span>
+            <span>
+                🟢 Strong Buy &nbsp;<span style="font-size:0.78rem;opacity:0.8;">(Score 9–11)</span>
+                <span class="peg-legend">
+                    <span><span class="peg-good">●</span> PEG &lt;1</span>
+                    <span><span class="peg-fair">●</span> PEG 1–2</span>
+                    <span><span class="peg-bad">●</span> PEG &gt;2</span>
+                    <span><span class="peg-na">●</span> N/A</span>
+                </span>
+            </span>
             <span class="signal-count" id="strong-count"></span>
         </div>
         <div class="signal-grid" id="strong-grid">
@@ -88,10 +105,18 @@
         </div>
     </div>
 
-    <!-- Watch Table -->
+    <!-- Watch List -->
     <div class="signal-table-wrap">
         <div class="signal-table-header watch">
-            <span>🟡 Watch List &nbsp;<span style="font-size:0.78rem;opacity:0.7;">(Score 6–7)</span></span>
+            <span>
+                🟡 Watch List &nbsp;<span style="font-size:0.78rem;opacity:0.7;">(Score 7–8)</span>
+                <span class="peg-legend" style="color:#333;">
+                    <span><span class="peg-good">●</span> PEG &lt;1</span>
+                    <span><span class="peg-fair">●</span> PEG 1–2</span>
+                    <span><span class="peg-bad">●</span> PEG &gt;2</span>
+                    <span><span class="peg-na">●</span> N/A</span>
+                </span>
+            </span>
             <span class="signal-count" id="watch-count"></span>
         </div>
         <div class="signal-grid" id="watch-grid">
@@ -99,159 +124,208 @@
         </div>
     </div>
 
+    <!-- Gainers / Losers -->
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="top-5-card">
                 <div class="top-5-header text-success">🚀 Top 5 Daily Gainers</div>
                 <table class="table table-sm small-table"><tbody id="top-gainers"></tbody></table>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="top-5-card">
                 <div class="top-5-header text-danger">📉 Top 5 Daily Losers</div>
                 <table class="table table-sm small-table"><tbody id="top-losers"></tbody></table>
             </div>
         </div>
+        <div class="col-md-2">
+            <div class="top-5-card">
+                <div class="top-5-header text-warning">🟢 52W High Prox</div>
+                <table class="table table-sm small-table"><tbody id="top-52h"></tbody></table>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="top-5-card">
+                <div class="top-5-header text-primary">🔴 52W Low Prox</div>
+                <table class="table table-sm small-table"><tbody id="top-52l"></tbody></table>
+            </div>
+        </div>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-md-3"><div class="top-5-card"><div class="top-5-header text-warning">🟢 52W High Prox</div><table class="table table-sm small-table"><tbody id="top-52h"></tbody></table></div></div>
-        <div class="col-md-3"><div class="top-5-card"><div class="top-5-header text-primary">🔴 52W Low Prox</div><table class="table table-sm small-table"><tbody id="top-52l"></tbody></table></div></div>
-        <div class="col-md-3"><div class="top-5-card"><div class="top-5-header text-warning">🏛️ 5Y High Prox</div><table class="table table-sm small-table"><tbody id="top-5yh"></tbody></table></div></div>
-        <div class="col-md-3"><div class="top-5-card"><div class="top-5-header text-primary">⚓ 5Y Low Prox</div><table class="table table-sm small-table"><tbody id="top-5yl"></tbody></table></div></div>
-    </div>
-
+    <!-- Main Table -->
     <div class="table-responsive">
-        <table class="table table-hover" id="main-stock-table">
+        <table class="table table-hover table-sm" id="main-stock-table">
             <thead>
                 <tr>
                     <th data-sort-method="dotsep">Ticker</th>
                     <th>Price</th>
                     <th>Day %</th>
+                    <th>Score</th>
+                    <th title="PEG Ratio — &lt;1 undervalued, 1-2 fair, &gt;2 expensive. N/A = pre-profit or no estimate.">PEG</th>
                     <th>Dist 52W High</th>
                     <th>Dist 52W Low</th>
-                    <th>Dist 5Y High</th>
-                    <th>Dist 5Y Low</th>
                 </tr>
             </thead>
             <tbody id="table-body"></tbody>
         </table>
     </div>
-</div>
+
+    <!-- Legend -->
+    <div class="text-muted small mt-1 mb-2 d-flex flex-wrap gap-3">
+        <span><strong>PEG:</strong>
+            <span class="peg-good ms-1">■ &lt;1 Undervalued</span>
+            <span class="peg-fair ms-2">■ 1–2 Fair</span>
+            <span class="peg-bad ms-2">■ &gt;2 Expensive</span>
+            <span class="peg-na ms-2">■ N/A</span>
+        </span>
+        <span><strong>Score (max 11):</strong>
+            <span class="text-success fw-bold ms-1">🟢 Strong ≥9</span>
+            <span class="text-warning fw-bold ms-2">🟡 Watch 7–8</span>
+            <span class="text-secondary ms-2">⚪ Neutral 5–6</span>
+            <span class="text-danger fw-bold ms-2">🔴 Avoid &lt;5</span>
+        </span>
+    </div>
+
+</div><!-- /container -->
 
 <script>
-    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9j82G-RmsQ0zlKmcgHqVCUpd5e8tVSqValzULDzCL1ceQrPEPczY5nVp2sl-9n5vNxosLu0qfN66G/pub?output=csv';
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9j82G-RmsQ0zlKmcgHqVCUpd5e8tVSqValzULDzCL1ceQrPEPczY5nVp2sl-9n5vNxosLu0qfN66G/pub?output=csv';
 
-    function init() {
-        Papa.parse(SHEET_CSV_URL, {
-            download: true,
-            header: true,
-            complete: function(results) {
-                const data = results.data.filter(row => row.Ticker && row.Price);
-                renderLeaderboards(data);
-                renderSignalTable(data, 'strong', [8, 9], 'strong-grid', 'strong-count');
-                renderSignalTable(data, 'watch',  [6, 7], 'watch-grid',  'watch-count');
-                renderMainTable(data);
+function pegClass(peg) {
+    if (isNaN(peg) || peg <= 0) return 'peg-na';
+    if (peg < 1)  return 'peg-good';
+    if (peg < 2)  return 'peg-fair';
+    return 'peg-bad';
+}
 
-                const table = document.getElementById('main-stock-table');
-                if (!table.getAttribute('data-tablesort-initialized')) {
-                    new Tablesort(table);
-                    table.setAttribute('data-tablesort-initialized', 'true');
-                }
-                document.getElementById('last-update').innerText = "Last Updated: " + new Date().toLocaleTimeString();
+function pegDisplay(peg) {
+    if (isNaN(peg) || peg <= 0) return 'N/A';
+    return peg.toFixed(2);
+}
+
+function init() {
+    Papa.parse(SHEET_CSV_URL, {
+        download: true,
+        header: true,
+        complete: function(results) {
+            const data = results.data.filter(row => row.Ticker && row.Price);
+            renderLeaderboards(data);
+            renderSignalTable(data, 'strong', [9, 10, 11], 'strong-grid', 'strong-count');
+            renderSignalTable(data, 'watch',  [7, 8],      'watch-grid',  'watch-count');
+            renderMainTable(data);
+
+            const table = document.getElementById('main-stock-table');
+            if (!table.getAttribute('data-tablesort-initialized')) {
+                new Tablesort(table);
+                table.setAttribute('data-tablesort-initialized', 'true');
             }
-        });
-    }
-
-    function renderSignalTable(data, type, scores, gridId, countId) {
-        const filtered = data.filter(row => {
-            const s = parseInt(row['Score']);
-            return scores.includes(s);
-        }).sort((a, b) => parseInt(b['Score']) - parseInt(a['Score']));
-
-        const grid    = document.getElementById(gridId);
-        const countEl = document.getElementById(countId);
-        countEl.innerText = filtered.length + ' stock' + (filtered.length !== 1 ? 's' : '');
-
-        if (filtered.length === 0) {
-            grid.innerHTML = '<div style="padding:10px 14px;color:#6c757d;font-size:0.82rem;">No stocks at this level.</div>';
-            return;
+            document.getElementById('last-update').innerText = "Last Updated: " + new Date().toLocaleTimeString();
         }
+    });
+}
 
-        grid.innerHTML = filtered.map(row => {
-            const score = parseInt(row['Score']);
-            const day   = parseFloat(row['Day %']);
-            const price = parseFloat(row.Price);
-            const dayStr   = isNaN(day)   ? '' : (day >= 0 ? '+' : '') + day.toFixed(2) + '%';
-            const dayClass = isNaN(day)   ? '' : (day >= 0 ? 'pos' : 'neg');
-            const priceStr = isNaN(price) ? '' : '$' + price.toFixed(2);
+function renderSignalTable(data, type, scores, gridId, countId) {
+    const filtered = data.filter(row => {
+        const s = parseInt(row['Score']);
+        return scores.includes(s);
+    }).sort((a, b) => parseInt(b['Score']) - parseInt(a['Score']));
 
-            return `<div class="signal-cell ${type}-cell">
-                <span class="sc-ticker">${row.Ticker}</span>
-                <span class="sc-price">${priceStr}</span>
-                <span class="sc-score ${type}">${score}</span>
-                <span class="sc-day ${dayClass}">${dayStr}</span>
-            </div>`;
-        }).join('');
+    const grid    = document.getElementById(gridId);
+    const countEl = document.getElementById(countId);
+    countEl.innerText = filtered.length + ' stock' + (filtered.length !== 1 ? 's' : '');
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div style="padding:10px 14px;color:#6c757d;font-size:0.82rem;">No stocks at this level.</div>';
+        return;
     }
 
-    function renderLeaderboards(data) {
-        const createSummaryRows = (sortedData, colName, prefix = "") => {
-            return sortedData.slice(0, 5).map(row => {
-                const val   = parseFloat(row[colName]);
-                const price = parseFloat(row.Price).toFixed(2);
-                return `<tr>
-                    <td><strong>${row.Ticker}</strong></td>
-                    <td class="text-end">
-                        <span class="summary-price">$${price}</span>
-                        <span class="${val >= 0 ? 'pos' : 'neg'}">${prefix}${val.toFixed(2)}%</span>
-                    </td>
-                </tr>`;
-            }).join('');
-        };
+    grid.innerHTML = filtered.map(row => {
+        const score    = parseInt(row['Score']);
+        const day      = parseFloat(row['Day %']);
+        const price    = parseFloat(row.Price);
+        const peg      = parseFloat(row['PEG Ratio']);
+        const dayStr   = isNaN(day)   ? '' : (day >= 0 ? '+' : '') + day.toFixed(2) + '%';
+        const dayClass = isNaN(day)   ? '' : (day >= 0 ? 'pos' : 'neg');
+        const priceStr = isNaN(price) ? '' : '$' + price.toFixed(2);
+        const pegStr   = pegDisplay(peg);
+        const pegCls   = pegClass(peg);
 
-        const sort = (arr, col, desc = false) => [...arr]
-            .filter(row => !isNaN(parseFloat(row[col])))
-            .sort((a, b) => desc ? parseFloat(b[col]) - parseFloat(a[col]) : parseFloat(a[col]) - parseFloat(b[col]));
+        return `<div class="signal-cell ${type}-cell">
+            <span class="sc-ticker">${row.Ticker}</span>
+            <span class="sc-price">${priceStr}</span>
+            <span class="sc-peg ${pegCls}" title="PEG Ratio: ${pegStr}">P:${pegStr}</span>
+            <span class="sc-score ${type}">${score}</span>
+            <span class="sc-day ${dayClass}">${dayStr}</span>
+        </div>`;
+    }).join('');
+}
 
-        document.getElementById('top-gainers').innerHTML = createSummaryRows(sort(data, 'Day %', true),  'Day %', "+");
-        document.getElementById('top-losers').innerHTML  = createSummaryRows(sort(data, 'Day %', false), 'Day %');
-        document.getElementById('top-52h').innerHTML     = createSummaryRows(sort(data, 'Dist 52W High %'), 'Dist 52W High %', "-");
-        document.getElementById('top-52l').innerHTML     = createSummaryRows(sort(data, 'Dist 52W Low %'),  'Dist 52W Low %',  "+");
-        document.getElementById('top-5yh').innerHTML     = createSummaryRows(sort(data, 'Dist 5Y High %'),  'Dist 5Y High %',  "-");
-        document.getElementById('top-5yl').innerHTML     = createSummaryRows(sort(data, 'Dist 5Y Low %'),   'Dist 5Y Low %',   "+");
-    }
-
-    function renderMainTable(data) {
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = data.map(row => {
-            const dayChange = parseFloat(row['Day %']);
-            const alertClass = Math.abs(dayChange) >= 10 ? (dayChange > 0 ? 'alert-flash-pos' : 'alert-flash') : '';
+function renderLeaderboards(data) {
+    const createSummaryRows = (sortedData, colName, prefix = "") => {
+        return sortedData.slice(0, 5).map(row => {
+            const val   = parseFloat(row[colName]);
+            const price = parseFloat(row.Price).toFixed(2);
             return `<tr>
-                <td><span class="${alertClass}"><strong>${row.Ticker}</strong></span></td>
-                <td data-sort="${row.Price}">$${parseFloat(row.Price).toFixed(2)}</td>
-                <td class="${dayChange >= 0 ? 'pos' : 'neg'}" data-sort="${dayChange}">${dayChange.toFixed(2)}%</td>
-                <td class="high-dist" data-sort="${row['Dist 52W High %']}">-${parseFloat(row['Dist 52W High %']).toFixed(1)}%</td>
-                <td class="low-dist"  data-sort="${row['Dist 52W Low %']}">+${parseFloat(row['Dist 52W Low %']).toFixed(1)}%</td>
-                <td class="high-dist" data-sort="${row['Dist 5Y High %']}">-${parseFloat(row['Dist 5Y High %']).toFixed(1)}%</td>
-                <td class="low-dist"  data-sort="${row['Dist 5Y Low %']}">+${parseFloat(row['Dist 5Y Low %']).toFixed(1)}%</td>
+                <td><strong>${row.Ticker}</strong></td>
+                <td class="text-end">
+                    <span class="summary-price">$${price}</span>
+                    <span class="${val >= 0 ? 'pos' : 'neg'}">${prefix}${val.toFixed(2)}%</span>
+                </td>
             </tr>`;
         }).join('');
+    };
+
+    const sort = (arr, col, desc = false) => [...arr]
+        .filter(row => !isNaN(parseFloat(row[col])))
+        .sort((a, b) => desc ? parseFloat(b[col]) - parseFloat(a[col]) : parseFloat(a[col]) - parseFloat(b[col]));
+
+    document.getElementById('top-gainers').innerHTML = createSummaryRows(sort(data, 'Day %', true),  'Day %', "+");
+    document.getElementById('top-losers').innerHTML  = createSummaryRows(sort(data, 'Day %', false), 'Day %');
+    document.getElementById('top-52h').innerHTML     = createSummaryRows(sort(data, 'Dist 52W High %'), 'Dist 52W High %', "-");
+    document.getElementById('top-52l').innerHTML     = createSummaryRows(sort(data, 'Dist 52W Low %'),  'Dist 52W Low %',  "+");
+}
+
+function renderMainTable(data) {
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = data.map(row => {
+        const dayChange  = parseFloat(row['Day %']);
+        const alertClass = Math.abs(dayChange) >= 10 ? (dayChange > 0 ? 'alert-flash-pos' : 'alert-flash') : '';
+        const score      = row['Score'] !== undefined ? row['Score'] : '—';
+        const scoreNum   = parseInt(score);
+        const peg        = parseFloat(row['PEG Ratio']);
+        const pegCls     = pegClass(peg);
+        const pegStr     = pegDisplay(peg);
+
+        const scoreCls = scoreNum >= 9 ? 'text-success fw-bold'
+                       : scoreNum >= 7 ? 'text-warning fw-bold'
+                       : scoreNum >= 5 ? 'text-secondary'
+                       : 'text-danger fw-bold';
+
+        return `<tr>
+            <td><span class="${alertClass}"><strong>${row.Ticker}</strong></span></td>
+            <td data-sort="${row.Price}">$${parseFloat(row.Price).toFixed(2)}</td>
+            <td class="${dayChange >= 0 ? 'pos' : 'neg'}" data-sort="${dayChange}">${dayChange.toFixed(2)}%</td>
+            <td class="${scoreCls}" data-sort="${isNaN(scoreNum) ? -1 : scoreNum}">${score}</td>
+            <td class="${pegCls}" data-sort="${isNaN(peg) || peg <= 0 ? 999 : peg}">${pegStr}</td>
+            <td class="high-dist" data-sort="${row['Dist 52W High %']}">-${parseFloat(row['Dist 52W High %']).toFixed(1)}%</td>
+            <td class="low-dist"  data-sort="${row['Dist 52W Low %']}">+${parseFloat(row['Dist 52W Low %']).toFixed(1)}%</td>
+        </tr>`;
+    }).join('');
+}
+
+function filterTable() {
+    const filter = document.getElementById("tickerSearch").value.toUpperCase();
+    const tr = document.getElementById("main-stock-table").getElementsByTagName("tr");
+    for (let i = 1; i < tr.length; i++) {
+        const td = tr[i].getElementsByTagName("td")[0];
+        tr[i].style.display = (td && (td.textContent || td.innerText).toUpperCase().indexOf(filter) > -1) ? "" : "none";
     }
+}
 
-    function filterTable() {
-        const filter = document.getElementById("tickerSearch").value.toUpperCase();
-        const tr = document.getElementById("main-stock-table").getElementsByTagName("tr");
-        for (let i = 1; i < tr.length; i++) {
-            const td = tr[i].getElementsByTagName("td")[0];
-            tr[i].style.display = (td && (td.textContent || td.innerText).toUpperCase().indexOf(filter) > -1) ? "" : "none";
-        }
-    }
+function clearSearch() { document.getElementById("tickerSearch").value = ""; filterTable(); }
 
-    function clearSearch() { document.getElementById("tickerSearch").value = ""; filterTable(); }
-
-    init();
-    setInterval(init, 60000);
+init();
+setInterval(init, 60000);
 </script>
 </body>
 </html>
