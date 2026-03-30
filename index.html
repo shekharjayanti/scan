@@ -15,10 +15,6 @@
         .neg { color: #dc3545; font-weight: bold; }
         .high-dist { color: #fd7e14; font-weight: 500; }
         .low-dist  { color: #6f42c1; font-weight: 500; }
-        .peg-good  { color: #28a745; font-weight: 600; }
-        .peg-fair  { color: #fd7e14; font-weight: 600; }
-        .peg-bad   { color: #dc3545; font-weight: 600; }
-        .peg-na    { color: #adb5bd; }
 
         .top-5-card { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 20px; height: 100%; }
         .top-5-header { background: #f8f9fa; font-weight: bold; padding: 8px; border-bottom: 1px solid #dee2e6; font-size: 0.85rem; text-align: center; }
@@ -33,14 +29,14 @@
         th { background-color: #f8f9fa !important; font-size: 0.75rem; text-transform: uppercase; color: #6c757d; cursor: pointer; }
         .small-table { font-size: 0.8rem; margin-bottom: 0; }
 
-        /* Signal Table */
+        /* Signal Tables */
         .signal-table-wrap   { border-radius: 10px; overflow: hidden; border: 1px solid #dee2e6; margin-bottom: 24px; }
         .signal-table-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; font-weight: 700; font-size: 0.9rem; }
         .signal-table-header.strong { background: linear-gradient(90deg, #1a7a3c, #28a745); color: white; }
         .signal-table-header.watch  { background: linear-gradient(90deg, #b8860b, #ffc107); color: #1a1a1a; }
         .signal-count { font-size: 0.78rem; font-weight: 600; opacity: 0.85; }
 
-        .signal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0; }
+        .signal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0; }
 
         .signal-cell {
             display: flex;
@@ -56,15 +52,19 @@
         .signal-cell.strong-cell { border-left: 3px solid #28a745; }
         .signal-cell.watch-cell  { border-left: 3px solid #ffc107; }
 
-        .sc-ticker { font-weight: 700; font-size: 0.88rem; color: #1a1a1a; min-width: 48px; }
-        .sc-price  { color: #6c757d; font-size: 0.75rem; margin: 0 3px; }
-        .sc-peg    { font-size: 0.72rem; font-weight: 600; margin: 0 3px; }
+        .sc-ticker { font-weight: 700; font-size: 0.88rem; color: #1a1a1a; min-width: 52px; }
+        .sc-price  { color: #6c757d; font-size: 0.75rem; margin: 0 6px; }
+        .sc-flag   { font-size: 0.68rem; font-weight: 700; border-radius: 8px; padding: 1px 6px; margin: 0 3px; }
+        .sc-flag.quality { background: #cce5ff; color: #004085; }
+        .sc-flag.trap    { background: #f8d7da; color: #721c24; }
         .sc-score  { font-size: 0.72rem; font-weight: 700; border-radius: 10px; padding: 1px 7px; white-space: nowrap; }
         .sc-score.strong { background: #d4edda; color: #155724; }
         .sc-score.watch  { background: #fff3cd; color: #856404; }
         .sc-day    { font-size: 0.78rem; font-weight: 600; min-width: 50px; text-align: right; }
 
-        .peg-legend { font-size: 0.7rem; display: inline-flex; gap: 10px; margin-left: 10px; opacity: 0.9; font-weight: 500; }
+        /* Flag badges in main table */
+        .flag-q { display: inline-block; font-size: 0.65rem; font-weight: 700; background: #cce5ff; color: #004085; border-radius: 6px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
+        .flag-t { display: inline-block; font-size: 0.65rem; font-weight: 700; background: #f8d7da; color: #721c24; border-radius: 6px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -90,12 +90,11 @@
     <div class="signal-table-wrap">
         <div class="signal-table-header strong">
             <span>
-                🟢 Strong Buy &nbsp;<span style="font-size:0.78rem;opacity:0.8;">(Score 9–11)</span>
-                <span class="peg-legend">
-                    <span><span class="peg-good">●</span> PEG &lt;1</span>
-                    <span><span class="peg-fair">●</span> PEG 1–2</span>
-                    <span><span class="peg-bad">●</span> PEG &gt;2</span>
-                    <span><span class="peg-na">●</span> N/A</span>
+                🟢 Strong Buy &nbsp;<span style="font-size:0.78rem;opacity:0.8;">(Score 8–9)</span>
+                &nbsp;
+                <span style="font-size:0.72rem;opacity:0.9;">
+                    <span style="background:#cce5ff;color:#004085;border-radius:6px;padding:1px 6px;font-weight:700;">Q</span> Quality flag &nbsp;
+                    <span style="background:#f8d7da;color:#721c24;border-radius:6px;padding:1px 6px;font-weight:700;">T</span> Trap flag
                 </span>
             </span>
             <span class="signal-count" id="strong-count"></span>
@@ -109,12 +108,11 @@
     <div class="signal-table-wrap">
         <div class="signal-table-header watch">
             <span>
-                🟡 Watch List &nbsp;<span style="font-size:0.78rem;opacity:0.7;">(Score 7–8)</span>
-                <span class="peg-legend" style="color:#333;">
-                    <span><span class="peg-good">●</span> PEG &lt;1</span>
-                    <span><span class="peg-fair">●</span> PEG 1–2</span>
-                    <span><span class="peg-bad">●</span> PEG &gt;2</span>
-                    <span><span class="peg-na">●</span> N/A</span>
+                🟡 Watch List &nbsp;<span style="font-size:0.78rem;opacity:0.75;">(Score 6–7)</span>
+                &nbsp;
+                <span style="font-size:0.72rem;opacity:0.9;color:#333;">
+                    <span style="background:#cce5ff;color:#004085;border-radius:6px;padding:1px 6px;font-weight:700;">Q</span> Quality flag &nbsp;
+                    <span style="background:#f8d7da;color:#721c24;border-radius:6px;padding:1px 6px;font-weight:700;">T</span> Trap flag
                 </span>
             </span>
             <span class="signal-count" id="watch-count"></span>
@@ -124,7 +122,7 @@
         </div>
     </div>
 
-    <!-- Gainers / Losers -->
+    <!-- Gainers / Losers / 52W -->
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="top-5-card">
@@ -161,7 +159,6 @@
                     <th>Price</th>
                     <th>Day %</th>
                     <th>Score</th>
-                    <th title="PEG Ratio — &lt;1 undervalued, 1-2 fair, &gt;2 expensive. N/A = pre-profit or no estimate.">PEG</th>
                     <th>Dist 52W High</th>
                     <th>Dist 52W Low</th>
                 </tr>
@@ -172,36 +169,22 @@
 
     <!-- Legend -->
     <div class="text-muted small mt-1 mb-2 d-flex flex-wrap gap-3">
-        <span><strong>PEG:</strong>
-            <span class="peg-good ms-1">■ &lt;1 Undervalued</span>
-            <span class="peg-fair ms-2">■ 1–2 Fair</span>
-            <span class="peg-bad ms-2">■ &gt;2 Expensive</span>
-            <span class="peg-na ms-2">■ N/A</span>
+        <span><strong>Score (max 9):</strong>
+            <span class="text-success fw-bold ms-1">🟢 Strong 8–9</span>
+            <span class="text-warning fw-bold ms-2">🟡 Watch 6–7</span>
+            <span class="text-secondary ms-2">⚪ Neutral 4–5</span>
+            <span class="text-danger fw-bold ms-2">🔴 Avoid &lt;4</span>
         </span>
-        <span><strong>Score (max 11):</strong>
-            <span class="text-success fw-bold ms-1">🟢 Strong ≥9</span>
-            <span class="text-warning fw-bold ms-2">🟡 Watch 7–8</span>
-            <span class="text-secondary ms-2">⚪ Neutral 5–6</span>
-            <span class="text-danger fw-bold ms-2">🔴 Avoid &lt;5</span>
+        <span>
+            <span class="flag-q">Q</span> Quality compounder override &nbsp;
+            <span class="flag-t">T</span> Value trap override
         </span>
     </div>
 
-</div><!-- /container -->
+</div>
 
 <script>
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9j82G-RmsQ0zlKmcgHqVCUpd5e8tVSqValzULDzCL1ceQrPEPczY5nVp2sl-9n5vNxosLu0qfN66G/pub?output=csv';
-
-function pegClass(peg) {
-    if (isNaN(peg) || peg <= 0) return 'peg-na';
-    if (peg < 1)  return 'peg-good';
-    if (peg < 2)  return 'peg-fair';
-    return 'peg-bad';
-}
-
-function pegDisplay(peg) {
-    if (isNaN(peg) || peg <= 0) return 'N/A';
-    return peg.toFixed(2);
-}
 
 function init() {
     Papa.parse(SHEET_CSV_URL, {
@@ -210,8 +193,8 @@ function init() {
         complete: function(results) {
             const data = results.data.filter(row => row.Ticker && row.Price);
             renderLeaderboards(data);
-            renderSignalTable(data, 'strong', [9, 10, 11], 'strong-grid', 'strong-count');
-            renderSignalTable(data, 'watch',  [7, 8],      'watch-grid',  'watch-count');
+            renderSignalTable(data, 'strong', [8, 9],  'strong-grid', 'strong-count');
+            renderSignalTable(data, 'watch',  [6, 7],  'watch-grid',  'watch-count');
             renderMainTable(data);
 
             const table = document.getElementById('main-stock-table');
@@ -222,6 +205,12 @@ function init() {
             document.getElementById('last-update').innerText = "Last Updated: " + new Date().toLocaleTimeString();
         }
     });
+}
+
+function getFlags(row) {
+    const quality = String(row['Quality'] || '').trim() === '1';
+    const trap    = String(row['Trap']    || '').trim() === '1';
+    return { quality, trap };
 }
 
 function renderSignalTable(data, type, scores, gridId, countId) {
@@ -243,17 +232,17 @@ function renderSignalTable(data, type, scores, gridId, countId) {
         const score    = parseInt(row['Score']);
         const day      = parseFloat(row['Day %']);
         const price    = parseFloat(row.Price);
-        const peg      = parseFloat(row['PEG Ratio']);
+        const { quality, trap } = getFlags(row);
         const dayStr   = isNaN(day)   ? '' : (day >= 0 ? '+' : '') + day.toFixed(2) + '%';
         const dayClass = isNaN(day)   ? '' : (day >= 0 ? 'pos' : 'neg');
         const priceStr = isNaN(price) ? '' : '$' + price.toFixed(2);
-        const pegStr   = pegDisplay(peg);
-        const pegCls   = pegClass(peg);
+        const flagHtml = (quality ? '<span class="sc-flag quality">Q</span>' : '')
+                       + (trap    ? '<span class="sc-flag trap">T</span>'    : '');
 
         return `<div class="signal-cell ${type}-cell">
             <span class="sc-ticker">${row.Ticker}</span>
             <span class="sc-price">${priceStr}</span>
-            <span class="sc-peg ${pegCls}" title="PEG Ratio: ${pegStr}">P:${pegStr}</span>
+            ${flagHtml}
             <span class="sc-score ${type}">${score}</span>
             <span class="sc-day ${dayClass}">${dayStr}</span>
         </div>`;
@@ -292,21 +281,24 @@ function renderMainTable(data) {
         const alertClass = Math.abs(dayChange) >= 10 ? (dayChange > 0 ? 'alert-flash-pos' : 'alert-flash') : '';
         const score      = row['Score'] !== undefined ? row['Score'] : '—';
         const scoreNum   = parseInt(score);
-        const peg        = parseFloat(row['PEG Ratio']);
-        const pegCls     = pegClass(peg);
-        const pegStr     = pegDisplay(peg);
+        const { quality, trap } = getFlags(row);
 
-        const scoreCls = scoreNum >= 9 ? 'text-success fw-bold'
-                       : scoreNum >= 7 ? 'text-warning fw-bold'
-                       : scoreNum >= 5 ? 'text-secondary'
+        const scoreCls = scoreNum >= 8 ? 'text-success fw-bold'
+                       : scoreNum >= 6 ? 'text-warning fw-bold'
+                       : scoreNum >= 4 ? 'text-secondary'
                        : 'text-danger fw-bold';
 
+        const flagHtml = (quality ? '<span class="flag-q">Q</span>' : '')
+                       + (trap    ? '<span class="flag-t">T</span>' : '');
+
         return `<tr>
-            <td><span class="${alertClass}"><strong>${row.Ticker}</strong></span></td>
+            <td>
+                <span class="${alertClass}"><strong>${row.Ticker}</strong></span>
+                ${flagHtml}
+            </td>
             <td data-sort="${row.Price}">$${parseFloat(row.Price).toFixed(2)}</td>
             <td class="${dayChange >= 0 ? 'pos' : 'neg'}" data-sort="${dayChange}">${dayChange.toFixed(2)}%</td>
             <td class="${scoreCls}" data-sort="${isNaN(scoreNum) ? -1 : scoreNum}">${score}</td>
-            <td class="${pegCls}" data-sort="${isNaN(peg) || peg <= 0 ? 999 : peg}">${pegStr}</td>
             <td class="high-dist" data-sort="${row['Dist 52W High %']}">-${parseFloat(row['Dist 52W High %']).toFixed(1)}%</td>
             <td class="low-dist"  data-sort="${row['Dist 52W Low %']}">+${parseFloat(row['Dist 52W Low %']).toFixed(1)}%</td>
         </tr>`;
